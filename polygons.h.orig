@@ -1,0 +1,305 @@
+#ifndef _polygons_h_
+#define _polygons_h_
+#include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
+#include "utilities.h"
+
+class Polygon {
+
+public:
+
+    // CONSTRUCTOR
+    Polygon(const std::string & n, const std::vector<Point> & vert) {
+        vertices = vert;
+        name = n;
+        if(isNotPolygon(vertices)) {
+            throw(1);
+        }
+
+
+    }
+
+    virtual ~Polygon() {}
+
+
+    // ACCESSORS
+    const std::string& getName() const {
+        return name;
+    }
+    bool HasARightAngle();
+
+
+
+
+    bool HasAllEqualSides();
+
+    bool HasAllEqualAngles();
+
+protected:
+    // REPRESENTATION
+    std::string name;
+    std::vector<Point> vertices;
+
+    //ACCESSOR
+    bool isNotPolygon(const std::vector<Point> & vertices);
+
+};
+
+
+class Triangle : public Polygon {
+public:
+//constructor
+    Triangle(const std::string & n, const std::vector<Point> & vert) : Polygon(n,vert) {
+       if(isNotTriangle(vertices)) {
+            throw(2);
+        }
+    }
+
+
+    virtual ~Triangle() {}
+	
+	protected:
+	bool isNotTriangle(const std::vector<Point> & vertices);
+
+};
+
+
+
+class RightTriangle : public virtual Triangle {
+public:
+//constructor
+    RightTriangle(const std::string & n, const std::vector<Point> & vert) : Triangle(n,vert)  {
+        name = n;
+        vertices = vert;
+        if(!HasARightAngle()) {
+            throw(3);
+        }
+    }
+
+
+    virtual ~RightTriangle() {}
+
+};
+
+class IsoscelesTriangle : public virtual Triangle {
+public:
+//constructor
+    IsoscelesTriangle(const std::string & n, const std::vector<Point> & vert) : Triangle(n,vert) {
+        name = n;
+        vertices = vert;
+       if(isNotIsoscelesTriangle(vertices))
+            throw(4);
+        }
+    
+
+
+    virtual ~IsoscelesTriangle() {}
+
+protected:
+bool isNotIsoscelesTriangle(const std::vector<Point> & vertices);
+};
+
+class EquilateralTriangle : public IsoscelesTriangle {
+public:
+//constructor
+    EquilateralTriangle(const std::string & n, const std::vector<Point> & vert) : Triangle(n,vert), IsoscelesTriangle(n,vert) {
+        name = n;
+        vertices = vert;
+        //has 3 equal sides;
+        if(isNotEquilateralTriangle(vertices)){
+            throw(5);
+        }
+    }
+
+
+    virtual ~EquilateralTriangle() {}
+
+protected:
+ bool isNotEquilateralTriangle(const std::vector<Point> & vertices);
+ 
+};
+
+class IsoscelesRightTriangle : public RightTriangle, public IsoscelesTriangle {
+public:
+//constructor
+    IsoscelesRightTriangle(const std::string & n, const std::vector<Point> & vert) : Triangle(n,vert), RightTriangle(n,vert), IsoscelesTriangle(n,vert) {
+        name = n;
+        vertices = vert;
+        // if((!EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[1],vertices[2])) && !EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[0],vertices[2]))) || !HasARightAngle())
+        // throw(6);
+    }
+    virtual ~IsoscelesRightTriangle() {}
+
+};
+
+
+class Quadrilateral : public Polygon {
+public:
+//constructor
+    Quadrilateral(const std::string & n, const std::vector<Point> & vert) : Polygon(n,vert)  {
+
+        if(isNotQuadrilateral(vertices)){
+            throw(7);
+        }
+    }
+    virtual ~Quadrilateral() {}
+
+	protected:
+	bool isNotQuadrilateral(const std::vector<Point> & vertices);
+};
+
+class Kite : public virtual Quadrilateral {
+public:
+//constructor
+    Kite(const std::string & n, const std::vector<Point> & vert) :  Quadrilateral(n,vert)  {
+        name = n;
+        vertices = vert;
+        //2 adjacent equal length
+        if(isNotKite(vertices)){
+            throw(8);
+        }
+    }
+    virtual ~Kite() {}
+
+	protected:
+	bool isNotKite(const std::vector<Point> & vertices);
+};
+
+class Trapezoid : public virtual Quadrilateral {
+public:
+//constructor
+    Trapezoid(const std::string & n, const std::vector<Point> & vert) :  Quadrilateral(n,vert)  {
+        name = n;
+        vertices = vert;
+		//at least one Parallel
+       if(isNotTrapezoid(vertices)){
+            throw(9);
+        }
+    }
+    virtual ~Trapezoid() {}
+
+protected:
+bool isNotTrapezoid(const std::vector<Point> & vertices);
+
+};
+
+class Parallelogram : public virtual Trapezoid {
+public:
+//constructor
+//2 Parallel sides have equal lengths
+    Parallelogram(const std::string & n, const std::vector<Point> & vert) : Quadrilateral(n,vert), Trapezoid(n,vert)  {
+        name = n;
+        vertices = vert;
+          if(name == "magenta") {
+                std::cout << name << "1" << std::endl;
+            }
+			
+			
+       if(isNotParallelogram(vertices)){
+	     if(name == "magenta") {
+                std::cout << name << "2" << std::endl;
+            }
+	   throw(10);
+	   }
+    }
+
+    virtual ~Parallelogram() {}
+
+	protected:
+	bool isNotParallelogram(const std::vector<Point> & vertices);
+};
+
+class Rhombus : public Kite, public virtual Parallelogram {
+public:
+//constructor
+    Rhombus(const std::string & n, const std::vector<Point> & vert) :  Quadrilateral(n,vert), Trapezoid(n,vert), Kite(n,vert), Parallelogram(n,vert)  {
+        name = n;
+        vertices = vert;
+        //all same length
+        if(isNotRhombus(vertices)){
+            throw(11);
+        }
+    }
+
+
+
+    virtual ~Rhombus() {}
+
+protected:
+bool isNotRhombus(const std::vector<Point> & vertices);
+
+};
+
+class IsoscelesTrapezoid : public virtual Trapezoid {
+public:
+//constructor
+    IsoscelesTrapezoid(const std::string & n, const std::vector<Point> & vert) : Quadrilateral(n,vert), Trapezoid(n,vert)  {
+        name = n;
+        vertices = vert;
+        // 2 opposite sides of equal length
+        if(isNotIsoscelesTrapezoid(vertices)){
+            throw(12);
+        }
+    }
+    virtual ~IsoscelesTrapezoid() {}
+
+protected:
+
+ bool isNotIsoscelesTrapezoid(const std::vector<Point> & vertices);
+
+};
+
+class Rectangle : public IsoscelesTrapezoid, public virtual Parallelogram {
+public:
+//constructor
+    Rectangle(const std::string & n, const std::vector<Point> & vert) : Quadrilateral(n,vert), Trapezoid(n,vert), Parallelogram(n,vert), IsoscelesTrapezoid(n,vert)  {
+        name = n;
+        vertices = vert;
+        //4 right angles
+        // if(Parallel(Vector(vertices[0],vertices[1]),Vector(vertices[2],vertices[3])) && Parallel(Vector(vertices[1],vertices[2]),Vector(vertices[3],vertices[0]))) {
+        // if(DistanceBetween(vertices[0],vertices[1]) != DistanceBetween(vertices[2],vertices[3]) || DistanceBetween(vertices[1],vertices[2]) != DistanceBetween(vertices[0],vertices[3]))  {
+        // throw(13);
+        // }
+        // }
+        // else {
+        // throw(13);
+        // }
+        if(!(HasAllEqualAngles() && HasARightAngle())) {
+            throw(13);
+        }
+    }
+
+
+    virtual ~Rectangle() {}
+};
+
+class Square : public Rhombus, public Rectangle {
+public:
+//constructor
+    Square(const std::string & n, const std::vector<Point> & vert) : Quadrilateral(n,vert), Parallelogram(n,vert), Trapezoid(n,vert), Rhombus(n,vert), Rectangle(n,vert)  {
+        name = n;
+        vertices = vert;
+        //All right angles
+
+        // if(DistanceBetween(vertices[0],vertices[1]) != DistanceBetween(vertices[2],vertices[3]) || DistanceBetween(vertices[1],vertices[2]) != DistanceBetween(vertices[0],vertices[3]) || DistanceBetween(vertices[1],vertices[2]) != DistanceBetween(vertices[0],vertices[1]))  {
+        // throw(14);
+        // }
+        // if(Parallel(Vector(vertices[0],vertices[1]),Vector(vertices[2],vertices[3])) && Parallel(Vector(vertices[1],vertices[2]),Vector(vertices[3],vertices[0]))) {
+        // if(DistanceBetween(vertices[0],vertices[1]) != DistanceBetween(vertices[2],vertices[3]) || DistanceBetween(vertices[1],vertices[2]) != DistanceBetween(vertices[0],vertices[3]))  {
+        // throw(14);
+        // }
+        // }
+        // else {
+        // throw(14);
+        // }
+    }
+    virtual ~Square() {}
+
+};
+
+
+#endif

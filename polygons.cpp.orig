@@ -1,0 +1,125 @@
+#include <vector>
+#include "polygons.h"
+
+using namespace std;
+
+
+
+bool Polygon::isNotPolygon(const vector<Point> & vertices) {
+    if((vertices[vertices.size()-1].x == vertices[0].x && vertices[vertices.size()-1].x == vertices[vertices.size()-2].x) || (vertices[vertices.size()-1].y == vertices[0].y && vertices[vertices.size()-1].y == vertices[vertices.size()-2].y) || vertices.size() < 3)
+        return true;
+    if((vertices[0].x == vertices[1].x && vertices[0].x == vertices[vertices.size()-1].x) || (vertices[0].y == vertices[1].y && vertices[0].y == vertices[vertices.size()-1].y))
+        return true;
+
+    for (int i = 1; i < vertices.size() - 1; i++) {
+        if((vertices[i].x == vertices[i+1].x && vertices[i].x == vertices[i-1].x) || (vertices[i].y == vertices[i+1].y && vertices[i].y == vertices[i-1].y))
+            return true;
+    }
+    return false;
+}
+ bool Polygon::HasARightAngle() {
+        if(RightAngle(Angle(vertices[vertices.size()-1],vertices[0],vertices[1]))) {
+            return true;
+        }
+        if(RightAngle(Angle(vertices[0],vertices[vertices.size()-1],vertices[vertices.size()-2]))) {
+            return true;
+        }
+        for (int i = 1; i < vertices.size() - 1; i++) {
+            if(RightAngle(Angle(vertices[i-1],vertices[i],vertices[i+1]))) {
+                return true;
+            }
+        }
+        return false;
+    }
+	
+	    bool Polygon::HasAllEqualSides() {
+        for(int i = 1; i < vertices.size(); i++) {
+            if(!EqualSides(DistanceBetween(vertices[vertices.size()-1],vertices[0]),DistanceBetween(vertices[i],vertices[i-1])))
+                return false;
+        }
+        return true;
+    }
+
+ bool Polygon::HasAllEqualAngles() {
+        if(!EqualAngles(Angle(vertices[vertices.size()-1],vertices[0],vertices[1]),Angle(vertices[vertices.size()-2],vertices[vertices.size()-1],vertices[0])))
+            return false;
+        for (int i = 1; i < vertices.size() - 1; i++) {
+            if(!EqualAngles(Angle(vertices[vertices.size()-1],vertices[0],vertices[1]),Angle(vertices[i-1],vertices[i],vertices[i+1])))
+                return false;
+        }
+        return true;
+    }
+	
+ bool Triangle::isNotTriangle(const vector<Point> & vertices) {
+   if(vertices.size() != 3){
+   return true;
+   }
+   return false;
+ }
+
+ 
+ bool IsoscelesTriangle::isNotIsoscelesTriangle(const vector<Point> & vertices) {
+ if(!(EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[1],vertices[2])) || EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[0],vertices[2])) || EqualSides(DistanceBetween(vertices[0],vertices[2]),DistanceBetween(vertices[1],vertices[2])))) {
+ return true;
+ }
+ return false;
+ }
+ 
+ bool EquilateralTriangle::isNotEquilateralTriangle(const vector<Point> & vertices){
+ if((!EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[1],vertices[2]))) || (!EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[0],vertices[2])))) {
+return true; 
+ }
+ return false;
+ }
+ 
+ bool Quadrilateral::isNotQuadrilateral(const vector<Point> & vertices){
+ if(vertices.size() != 4) {
+ return true;
+ }
+ return false;
+ }
+ 
+  bool Kite::isNotKite(const vector<Point> & vertices){
+if(!((EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[3],vertices[0])) && EqualSides(DistanceBetween(vertices[1],vertices[2]),DistanceBetween(vertices[2],vertices[3]))) || (EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[1],vertices[2])) && EqualSides(DistanceBetween(vertices[2],vertices[3]),DistanceBetween(vertices[3],vertices[0])))) ) {
+ return true;
+ }
+ return false;
+ }
+ 
+ bool Trapezoid::isNotTrapezoid(const vector<Point> & vertices){
+  if(!(Parallel(Vector(vertices[0],vertices[1]),Vector(vertices[2],vertices[3])) || Parallel(Vector(vertices[1],vertices[2]),Vector(vertices[3],vertices[0])))) {
+  return true;
+  }
+  return false;
+  }
+  
+   bool Parallelogram::isNotParallelogram(const vector<Point> & vertices){
+   if(!(Parallel(Vector(vertices[0],vertices[1]),Vector(vertices[2],vertices[3])) && Parallel(Vector(vertices[1],vertices[2]),Vector(vertices[3],vertices[0])))) {
+return true;
+   
+   }
+   else {
+            if(!((EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[2],vertices[3]))) && (EqualSides(DistanceBetween(vertices[1],vertices[2]),DistanceBetween(vertices[3],vertices[0])))))  {
+return true;
+
+          
+        }
+        
+        }
+		return false;
+		}
+		
+		
+		 bool Rhombus::isNotRhombus(const vector<Point> & vertices){
+		if(!EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[2],vertices[3])) || !EqualSides(DistanceBetween(vertices[1],vertices[2]),DistanceBetween(vertices[0],vertices[3])) || !EqualSides(DistanceBetween(vertices[1],vertices[2]),DistanceBetween(vertices[0],vertices[1])))  {
+		return true;
+		}
+		return false;
+		}
+		
+		 bool IsoscelesTrapezoid::isNotIsoscelesTrapezoid(const vector<Point> & vertices){
+		if((!EqualSides(DistanceBetween(vertices[0],vertices[1]),DistanceBetween(vertices[2],vertices[3]))) && (!EqualSides(DistanceBetween(vertices[1],vertices[2]),DistanceBetween(vertices[0],vertices[3])))) {
+		return true;
+		}
+		return false;
+		}

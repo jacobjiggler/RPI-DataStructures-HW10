@@ -1,0 +1,20 @@
+#include <vector>
+#include "utilities.h"
+#include "polygons.h"
+
+using namespace std;
+
+
+	
+bool Polygon::isPolygon(const vector<Point> & vertices){
+if((vertices[vertices.size()-1].x == vertices[0].x && vertices[vertices.size()-1].x == vertices[vertices.size()-2].x) || (vertices[vertices.size()-1].y == vertices[0].y && vertices[vertices.size()-1].y == vertices[vertices.size()-2].y) || vertices.size() < 3)
+	return false;
+	if((vertices[0].x == vertices[1].x && vertices[0].x == vertices[vertices.size()-1].x) || (vertices[0].y == vertices[1].y && vertices[0].y == vertices[vertices.size()-1].y))
+	return false;
+	
+	for (int i = 1; i < vertices.size() - 1; i++){
+	if((vertices[i].x == vertices[i+1].x && vertices[i].x == vertices[i-1].x) || (vertices[i].y == vertices[i+1].y && vertices[i].y == vertices[i-1].y))
+	return false;
+	}
+
+}
